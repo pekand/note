@@ -37,23 +37,29 @@
             saveToolStripMenuItem = new ToolStripMenuItem();
             saveAsToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
+            insertToolStripMenuItem = new ToolStripMenuItem();
+            dateToolStripMenuItem = new ToolStripMenuItem();
             settingsToolStripMenuItem = new ToolStripMenuItem();
             topToolStripMenuItem = new ToolStripMenuItem();
-            fontToolStripMenuItem = new ToolStripMenuItem();
             autosaveToolStripMenuItem = new ToolStripMenuItem();
             showMenuToolStripMenuItem = new ToolStripMenuItem();
+            transparentToolStripMenuItem = new ToolStripMenuItem();
+            fontToolStripMenuItem = new ToolStripMenuItem();
+            backgroundColorToolStripMenuItem = new ToolStripMenuItem();
+            textColorToolStripMenuItem = new ToolStripMenuItem();
             textBox = new RichTextBox();
             timer = new System.Windows.Forms.Timer(components);
             saveFileDialog = new SaveFileDialog();
             openFileDialog = new OpenFileDialog();
             fontDialog = new FontDialog();
-            transparentToolStripMenuItem = new ToolStripMenuItem();
+            colorDialogBackground = new ColorDialog();
+            colorDialogFont = new ColorDialog();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, settingsToolStripMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, insertToolStripMenuItem, settingsToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Size = new Size(1067, 24);
@@ -102,9 +108,23 @@
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
+            // insertToolStripMenuItem
+            // 
+            insertToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dateToolStripMenuItem });
+            insertToolStripMenuItem.Name = "insertToolStripMenuItem";
+            insertToolStripMenuItem.Size = new Size(48, 20);
+            insertToolStripMenuItem.Text = "Insert";
+            // 
+            // dateToolStripMenuItem
+            // 
+            dateToolStripMenuItem.Name = "dateToolStripMenuItem";
+            dateToolStripMenuItem.Size = new Size(98, 22);
+            dateToolStripMenuItem.Text = "Date";
+            dateToolStripMenuItem.Click += dateToolStripMenuItem_Click;
+            // 
             // settingsToolStripMenuItem
             // 
-            settingsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { topToolStripMenuItem, fontToolStripMenuItem, autosaveToolStripMenuItem, showMenuToolStripMenuItem, transparentToolStripMenuItem });
+            settingsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { topToolStripMenuItem, autosaveToolStripMenuItem, showMenuToolStripMenuItem, transparentToolStripMenuItem, fontToolStripMenuItem, backgroundColorToolStripMenuItem, textColorToolStripMenuItem });
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             settingsToolStripMenuItem.Size = new Size(61, 20);
             settingsToolStripMenuItem.Text = "Settings";
@@ -116,13 +136,6 @@
             topToolStripMenuItem.Size = new Size(180, 22);
             topToolStripMenuItem.Text = "Top";
             topToolStripMenuItem.Click += topToolStripMenuItem_Click;
-            // 
-            // fontToolStripMenuItem
-            // 
-            fontToolStripMenuItem.Name = "fontToolStripMenuItem";
-            fontToolStripMenuItem.Size = new Size(180, 22);
-            fontToolStripMenuItem.Text = "Font";
-            fontToolStripMenuItem.Click += fontToolStripMenuItem_Click;
             // 
             // autosaveToolStripMenuItem
             // 
@@ -138,6 +151,34 @@
             showMenuToolStripMenuItem.Text = "Show menu";
             showMenuToolStripMenuItem.Click += showMenuToolStripMenuItem_Click;
             // 
+            // transparentToolStripMenuItem
+            // 
+            transparentToolStripMenuItem.Name = "transparentToolStripMenuItem";
+            transparentToolStripMenuItem.Size = new Size(180, 22);
+            transparentToolStripMenuItem.Text = "Transparent";
+            transparentToolStripMenuItem.Click += transparentToolStripMenuItem_Click;
+            // 
+            // fontToolStripMenuItem
+            // 
+            fontToolStripMenuItem.Name = "fontToolStripMenuItem";
+            fontToolStripMenuItem.Size = new Size(180, 22);
+            fontToolStripMenuItem.Text = "Font";
+            fontToolStripMenuItem.Click += fontToolStripMenuItem_Click;
+            // 
+            // backgroundColorToolStripMenuItem
+            // 
+            backgroundColorToolStripMenuItem.Name = "backgroundColorToolStripMenuItem";
+            backgroundColorToolStripMenuItem.Size = new Size(180, 22);
+            backgroundColorToolStripMenuItem.Text = "Background color";
+            backgroundColorToolStripMenuItem.Click += backgroundColorToolStripMenuItem_Click;
+            // 
+            // textColorToolStripMenuItem
+            // 
+            textColorToolStripMenuItem.Name = "textColorToolStripMenuItem";
+            textColorToolStripMenuItem.Size = new Size(180, 22);
+            textColorToolStripMenuItem.Text = "Text color";
+            textColorToolStripMenuItem.Click += textColorToolStripMenuItem_Click;
+            // 
             // textBox
             // 
             textBox.BackColor = Color.Black;
@@ -150,6 +191,7 @@
             textBox.TabIndex = 1;
             textBox.Text = "";
             textBox.TextChanged += textBox_TextChanged;
+            textBox.AutoWordSelection = false;
             // 
             // timer
             // 
@@ -165,13 +207,6 @@
             // openFileDialog
             // 
             openFileDialog.FileName = "openFileDialog1";
-            // 
-            // transparentToolStripMenuItem
-            // 
-            transparentToolStripMenuItem.Name = "transparentToolStripMenuItem";
-            transparentToolStripMenuItem.Size = new Size(180, 22);
-            transparentToolStripMenuItem.Text = "Transparent";
-            transparentToolStripMenuItem.Click += transparentToolStripMenuItem_Click;
             // 
             // Note
             // 
@@ -215,5 +250,11 @@
         private ToolStripMenuItem autosaveToolStripMenuItem;
         private ToolStripMenuItem showMenuToolStripMenuItem;
         private ToolStripMenuItem transparentToolStripMenuItem;
+        private ToolStripMenuItem insertToolStripMenuItem;
+        private ToolStripMenuItem dateToolStripMenuItem;
+        private ToolStripMenuItem backgroundColorToolStripMenuItem;
+        private ToolStripMenuItem textColorToolStripMenuItem;
+        private ColorDialog colorDialogBackground;
+        private ColorDialog colorDialogFont;
     }
 }

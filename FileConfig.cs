@@ -16,5 +16,7 @@ namespace Note
         public bool ontop = false;
         public bool showmenu = false;
         public bool transparent = false;
+        public Color color = Color.Gray;
+        public Color background = Color.Black;
     }
 }

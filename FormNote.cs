@@ -1,4 +1,5 @@
 using Note;
+using System.Windows.Forms;
 using System.Xml;
 using static System.Environment;
 
@@ -28,6 +29,7 @@ namespace Notepad
                 this.open(args[1]);
             }
 
+            textBox.AutoWordSelection = false;
         }
 
 
@@ -197,6 +199,9 @@ namespace Notepad
                 writer.WriteElementString("y", this.Top.ToString());
                 writer.WriteElementString("width", this.Width.ToString());
                 writer.WriteElementString("height", this.Height.ToString());
+                writer.WriteElementString("color", this.fileConfig.color.ToArgb().ToString());
+                writer.WriteElementString("background", this.fileConfig.background.ToArgb().ToString());
+
 
                 string fontString = $"{textBox.Font.FontFamily.Name},{textBox.Font.Size},{textBox.Font.Style}";
 
@@ -251,6 +256,40 @@ namespace Notepad
                     FontStyle fontStyle = (FontStyle)Enum.Parse(typeof(FontStyle), fontParts[2]);
                     Font font = new Font(fontFamily, fontSize, fontStyle);
                     textBox.Font = font;
+                }
+                catch (Exception)
+                {
+
+                }
+
+            }
+
+            string colorString = configNode.SelectSingleNode("color")?.InnerText;
+            if (colorString != null && colorString.Length > 0)
+            {
+                try
+                {
+                    int argb = Int32.Parse(colorString);
+                    Color colorFromArgb = Color.FromArgb(argb);
+                    this.fileConfig.color = colorFromArgb;
+                    this.textBox.ForeColor = this.fileConfig.color;
+                }
+                catch (Exception)
+                {
+
+                }
+
+            }
+
+            string backgroundString = configNode.SelectSingleNode("background")?.InnerText;
+            if (backgroundString != null && backgroundString.Length > 0)
+            {
+                try
+                {
+                    int argb = Int32.Parse(backgroundString);
+                    Color colorFromArgb = Color.FromArgb(argb);
+                    this.fileConfig.background = colorFromArgb;
+                    this.textBox.BackColor = this.fileConfig.background;
                 }
                 catch (Exception)
                 {
@@ -314,6 +353,32 @@ namespace Notepad
             this.fileConfig.transparent = !this.fileConfig.transparent;
             this.transparentToolStripMenuItem.Checked = this.fileConfig.transparent;
             this.Opacity = this.fileConfig.transparent ? 0.9 : 1;
+        }
+
+        private void dateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBox.SelectedText = "[" + DateTime.Now.ToString() + "]";
+        }
+
+        private void backgroundColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.colorDialogBackground.Color = this.fileConfig.background;
+            if (this.colorDialogBackground.ShowDialog() == DialogResult.OK)
+            {
+                this.fileConfig.background = this.colorDialogBackground.Color;
+                this.textBox.BackColor = this.fileConfig.background;
+            }
+        }
+
+        private void textColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ;
+            this.colorDialogFont.Color = this.fileConfig.color;
+            if (this.colorDialogFont.ShowDialog() == DialogResult.OK)
+            {
+                this.fileConfig.color = this.colorDialogFont.Color;
+                this.textBox.ForeColor = this.fileConfig.color;
+            }
         }
     }
 }
