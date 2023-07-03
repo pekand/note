@@ -1,3 +1,4 @@
+using Note;
 using System.Xml;
 using static System.Environment;
 
@@ -5,12 +6,7 @@ namespace Notepad
 {
     public partial class Note : Form
     {
-        public string filePath = "";
-        public bool isSaved = false;
-        public bool isOpen = false;
-        public string content = "";
-        public bool autosave = false;
-        public bool ontop = false;
+        public FileConfig fileConfig = new FileConfig();
 
         public Note()
         {
@@ -31,6 +27,7 @@ namespace Notepad
             {
                 this.open(args[1]);
             }
+
         }
 
 
@@ -38,10 +35,10 @@ namespace Notepad
         public void newFile()
         {
             this.textBox.Text = "";
-            this.content = "";
-            this.filePath = "";
-            this.isSaved = false;
-            this.isOpen = false;
+            this.fileConfig.content = "";
+            this.fileConfig.filePath = "";
+            this.fileConfig.isSaved = false;
+            this.fileConfig.isOpen = false;
             this.Text = "Note";
         }
 
@@ -52,11 +49,11 @@ namespace Notepad
 
         public void save(bool saveAs = false)
         {
-            if (this.isOpen && !this.isSaved)
+            if (this.fileConfig.isOpen && !this.fileConfig.isSaved)
             {
-                this.content = textBox.Text;
-                File.WriteAllText(this.filePath, this.content);
-                this.isSaved = true;
+                this.fileConfig.content = textBox.Text;
+                File.WriteAllText(this.fileConfig.filePath, this.fileConfig.content);
+                this.fileConfig.isSaved = true;
             }
         }
 
@@ -65,12 +62,12 @@ namespace Notepad
 
             if (File.Exists(filePath))
             {
-                this.content = File.ReadAllText(filePath);
-                this.textBox.Text = content;
-                this.filePath = filePath;
-                this.isSaved = true;
-                this.isOpen = true;
-                this.Text = this.filePath;
+                this.fileConfig.content = File.ReadAllText(filePath);
+                this.textBox.Text = this.fileConfig.content;
+                this.fileConfig.filePath = filePath;
+                this.fileConfig.isSaved = true;
+                this.fileConfig.isOpen = true;
+                this.Text = this.fileConfig.filePath;
             }
         }
 
@@ -101,13 +98,13 @@ namespace Notepad
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.saveFileDialog.FileName = this.filePath;
+            this.saveFileDialog.FileName = this.fileConfig.filePath;
             if (this.saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                this.filePath = this.saveFileDialog.FileName;
-                this.Text = filePath;
-                this.isSaved = false;
-                this.isOpen = true;
+                this.fileConfig.filePath = this.saveFileDialog.FileName;
+                this.Text = this.fileConfig.filePath;
+                this.fileConfig.isSaved = false;
+                this.fileConfig.isOpen = true;
                 this.saveAs();
             }
         }
@@ -115,7 +112,7 @@ namespace Notepad
         private void topToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.TopMost = !this.TopMost;
-            this.ontop = this.TopMost;
+            this.fileConfig.ontop = this.TopMost;
             topToolStripMenuItem.Checked = this.TopMost;
         }
 
@@ -131,19 +128,19 @@ namespace Notepad
 
         private void autosaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.autosave = !this.autosave;
-            timer.Enabled = this.autosave;
-            autosaveToolStripMenuItem.Checked = this.autosave;
+            this.fileConfig.autosave = !this.fileConfig.autosave;
+            timer.Enabled = this.fileConfig.autosave;
+            autosaveToolStripMenuItem.Checked = this.fileConfig.autosave;
         }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            autosaveToolStripMenuItem.Checked = this.autosave;
+            autosaveToolStripMenuItem.Checked = this.fileConfig.autosave;
         }
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            if (!this.autosave)
+            if (!this.fileConfig.autosave)
             {
                 return;
             }
@@ -156,12 +153,12 @@ namespace Notepad
         {
 
             string newContent = textBox.Text;
-            if (newContent != content)
+            if (newContent != this.fileConfig.content)
             {
-                this.isSaved = false;
+                this.fileConfig.isSaved = false;
             }
 
-            this.content = newContent;
+            this.fileConfig.content = newContent;
         }
 
 
@@ -176,7 +173,6 @@ namespace Notepad
 
         public void saveConfig()
         {
-
             var commonpath = GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var configPath = Path.Combine(commonpath, "Note\\config.xml");
 
@@ -193,8 +189,10 @@ namespace Notepad
                 writer.WriteStartDocument();
                 writer.WriteStartElement("Config");
 
-                writer.WriteElementString("autosave", this.autosave ? "1" : "0");
-                writer.WriteElementString("ontop", this.ontop ? "1" : "0");
+                writer.WriteElementString("autosave", this.fileConfig.autosave ? "1" : "0");
+                writer.WriteElementString("ontop", this.fileConfig.ontop ? "1" : "0");
+                writer.WriteElementString("showmenu", this.fileConfig.showmenu ? "1" : "0");
+                writer.WriteElementString("transparent", this.fileConfig.transparent ? "1" : "0");
                 writer.WriteElementString("x", this.Left.ToString());
                 writer.WriteElementString("y", this.Top.ToString());
                 writer.WriteElementString("width", this.Width.ToString());
@@ -227,12 +225,20 @@ namespace Notepad
 
             XmlNode configNode = xmlDoc.SelectSingleNode("/Config");
 
-            this.autosave = configNode.SelectSingleNode("autosave")?.InnerText == "1";
-            this.autosaveToolStripMenuItem.Checked = this.autosave;
+            this.fileConfig.autosave = configNode.SelectSingleNode("autosave")?.InnerText == "1";
+            this.autosaveToolStripMenuItem.Checked = this.fileConfig.autosave;
 
-            this.ontop = configNode.SelectSingleNode("ontop")?.InnerText == "1";
-            this.TopMost = this.ontop;
+            this.fileConfig.ontop = configNode.SelectSingleNode("ontop")?.InnerText == "1";
+            this.TopMost = this.fileConfig.ontop;
             this.topToolStripMenuItem.Checked = this.TopMost;
+
+            this.fileConfig.showmenu = configNode.SelectSingleNode("showmenu")?.InnerText == "1";
+            this.showMenuToolStripMenuItem.Checked = this.fileConfig.showmenu;
+            this.menuStrip.Visible = this.fileConfig.showmenu;
+
+            this.fileConfig.transparent = configNode.SelectSingleNode("transparent")?.InnerText == "1";
+            this.transparentToolStripMenuItem.Checked = this.fileConfig.transparent;
+            this.Opacity = this.fileConfig.transparent ? 0.9 : 1;
 
             string fontString = configNode.SelectSingleNode("font")?.InnerText;
             if (fontString != null && fontString.Length > 0)
@@ -265,9 +271,6 @@ namespace Notepad
 
             }
 
-
-
-
         }
 
         private void Notepad_Shown(object sender, EventArgs e)
@@ -285,9 +288,32 @@ namespace Notepad
             this.saveConfig();
         }
 
-        private void menuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
+            if (keyData == (Keys.F10))
+            {
+                this.fileConfig.showmenu = !this.fileConfig.showmenu;
+                this.menuStrip.Visible = this.fileConfig.showmenu;
+                this.showMenuToolStripMenuItem.Checked = this.fileConfig.showmenu;
 
+
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void showMenuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.fileConfig.showmenu = !this.fileConfig.showmenu;
+            this.menuStrip.Visible = this.fileConfig.showmenu;
+            this.showMenuToolStripMenuItem.Checked = this.fileConfig.showmenu;
+        }
+
+        private void transparentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.fileConfig.transparent = !this.fileConfig.transparent;
+            this.transparentToolStripMenuItem.Checked = this.fileConfig.transparent;
+            this.Opacity = this.fileConfig.transparent ? 0.9 : 1;
         }
     }
 }
