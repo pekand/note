@@ -54,6 +54,7 @@
             fontDialog = new FontDialog();
             colorDialogBackground = new ColorDialog();
             colorDialogFont = new ColorDialog();
+            rememberLastFileToolStripMenuItem = new ToolStripMenuItem();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -124,7 +125,7 @@
             // 
             // settingsToolStripMenuItem
             // 
-            settingsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { topToolStripMenuItem, autosaveToolStripMenuItem, showMenuToolStripMenuItem, transparentToolStripMenuItem, fontToolStripMenuItem, backgroundColorToolStripMenuItem, textColorToolStripMenuItem });
+            settingsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { topToolStripMenuItem, autosaveToolStripMenuItem, showMenuToolStripMenuItem, transparentToolStripMenuItem, fontToolStripMenuItem, backgroundColorToolStripMenuItem, textColorToolStripMenuItem, rememberLastFileToolStripMenuItem });
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             settingsToolStripMenuItem.Size = new Size(61, 20);
             settingsToolStripMenuItem.Text = "Settings";
@@ -191,7 +192,6 @@
             textBox.TabIndex = 1;
             textBox.Text = "";
             textBox.TextChanged += textBox_TextChanged;
-            textBox.AutoWordSelection = false;
             // 
             // timer
             // 
@@ -207,6 +207,13 @@
             // openFileDialog
             // 
             openFileDialog.FileName = "openFileDialog1";
+            // 
+            // rememberLastFileToolStripMenuItem
+            // 
+            rememberLastFileToolStripMenuItem.Name = "rememberLastFileToolStripMenuItem";
+            rememberLastFileToolStripMenuItem.Size = new Size(180, 22);
+            rememberLastFileToolStripMenuItem.Text = "Remember last file";
+            rememberLastFileToolStripMenuItem.Click += rememberLastFileToolStripMenuItem_Click;
             // 
             // Note
             // 
@@ -256,5 +263,6 @@
         private ToolStripMenuItem textColorToolStripMenuItem;
         private ColorDialog colorDialogBackground;
         private ColorDialog colorDialogFont;
+        private ToolStripMenuItem rememberLastFileToolStripMenuItem;
     }
 }

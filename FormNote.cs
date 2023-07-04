@@ -30,6 +30,10 @@ namespace Notepad
             }
 
             textBox.AutoWordSelection = false;
+
+            if (this.fileConfig.rememberLastFile) {
+                this.open(this.fileConfig.filePath);
+            }
         }
 
 
@@ -62,7 +66,7 @@ namespace Notepad
         public void open(string filePath = "")
         {
 
-            if (File.Exists(filePath))
+            if (filePath != null && filePath!= "" && File.Exists(filePath))
             {
                 this.fileConfig.content = File.ReadAllText(filePath);
                 this.textBox.Text = this.fileConfig.content;
@@ -201,10 +205,10 @@ namespace Notepad
                 writer.WriteElementString("height", this.Height.ToString());
                 writer.WriteElementString("color", this.fileConfig.color.ToArgb().ToString());
                 writer.WriteElementString("background", this.fileConfig.background.ToArgb().ToString());
-
+                writer.WriteElementString("rememberLastFile", this.fileConfig.rememberLastFile ? "1" : "0");
+                writer.WriteElementString("filePath", this.fileConfig.filePath);
 
                 string fontString = $"{textBox.Font.FontFamily.Name},{textBox.Font.Size},{textBox.Font.Style}";
-
                 writer.WriteElementString("font", fontString);
 
                 writer.WriteEndElement();
@@ -244,6 +248,13 @@ namespace Notepad
             this.fileConfig.transparent = configNode.SelectSingleNode("transparent")?.InnerText == "1";
             this.transparentToolStripMenuItem.Checked = this.fileConfig.transparent;
             this.Opacity = this.fileConfig.transparent ? 0.9 : 1;
+
+            this.fileConfig.rememberLastFile = configNode.SelectSingleNode("rememberLastFile")?.InnerText == "1";
+            this.rememberLastFileToolStripMenuItem.Checked = this.fileConfig.rememberLastFile;
+            if (this.fileConfig.rememberLastFile) {
+                this.fileConfig.filePath = configNode.SelectSingleNode("filePath")?.InnerText;
+            }
+
 
             string fontString = configNode.SelectSingleNode("font")?.InnerText;
             if (fontString != null && fontString.Length > 0)
@@ -379,6 +390,12 @@ namespace Notepad
                 this.fileConfig.color = this.colorDialogFont.Color;
                 this.textBox.ForeColor = this.fileConfig.color;
             }
+        }
+
+        private void rememberLastFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.fileConfig.rememberLastFile = !this.fileConfig.rememberLastFile;
+            this.rememberLastFileToolStripMenuItem.Checked = this.fileConfig.rememberLastFile;
         }
     }
 }

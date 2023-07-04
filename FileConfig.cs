@@ -18,5 +18,6 @@ namespace Note
         public bool transparent = false;
         public Color color = Color.Gray;
         public Color background = Color.Black;
+        public bool rememberLastFile = false;
     }
 }
